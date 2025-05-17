@@ -1,13 +1,10 @@
 import sqlite3
 
-# Connect to SQLite database (creates if not exists)
 conn = sqlite3.connect("timetable.db")
 cur = conn.cursor()
 
-# ✅ Enforce foreign key constraints
 cur.execute("PRAGMA foreign_keys = ON;")
 
-# ✅ Execute schema creation
 cur.executescript("""
 -- Departments
 CREATE TABLE IF NOT EXISTS Departments (
@@ -180,8 +177,7 @@ BEGIN
 END;
 """)
 
-# ✅ Commit & close connection
 conn.commit()
 conn.close()
 
-print("✅ Database schema created safely and successfully.")
+print("Database schema created safely and successfully.")
