@@ -10,7 +10,6 @@ Our web-based system helps students and admins access and manage timetables, exa
 ### 🔍 Student Panel
 Just enter your **Roll Number** and get:
 - 🕒 Your **Class Timetable**
-- 📝 Your **Exam Schedule** *(if available)*
 - 👨‍🏫 **Teacher Details** — including their email!
 
 > Say goodbye to asking around or checking lengthy PDFs.
@@ -39,7 +38,7 @@ Building this system involved:
 
 ## 👨‍💻 Tech Stack
 
-- **Frontend:** HTML, CSS, JavaScript
+- **Frontend:** Tkinter
 - **Backend:** Python (Flask)
 - **Database:** SQLite (normalized schema + constraints)
 - **Extras:** Triggers, Views, Joins, Admin Auth
