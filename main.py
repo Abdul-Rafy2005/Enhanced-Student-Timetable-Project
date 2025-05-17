@@ -127,8 +127,8 @@ def student_login(roll_number):
         conn.close()
 
         if result:
-            logged_in_roll = roll  # Save it for later use
-            students_setting()     # Continue to dashboard
+            logged_in_roll = roll 
+            students_setting()     
         else:
             messagebox.showerror("Login Failed", "Roll number not found in records.")
     except sqlite3.Error as e:
@@ -164,7 +164,7 @@ def students_setting():
     student_title_label = tk.Label(root, text=f"Welcome, {student_name}!", font=("Playfair Display", 26, "bold"), bg="#000", fg="#00ffff")
     student_title_label.pack(pady=10)
 
-    # Apply Treeview styling
+   
     style = ttk.Style()
     style.theme_use("default")
     style.configure("Custom.Treeview",
@@ -174,7 +174,7 @@ def students_setting():
                     font=("Segoe UI", 10))
     style.map("Custom.Treeview", background=[("selected", "#0078d7")])
 
-    # ----- Timetable Treeview -----
+  
     timetable_tree = ttk.Treeview(center_frame, columns=("Day", "Time", "Course Code", "Course Name", "Teacher", "Room"),
                                   show='headings', style="Custom.Treeview")
     for col in timetable_tree["columns"]:
@@ -182,21 +182,21 @@ def students_setting():
         timetable_tree.column(col, anchor="center", width=195)
     timetable_tree.pack(pady=10, fill="both", expand=True)
 
-    # ----- Teacher Info Treeview (initially hidden) -----
+  
     teacher_tree = ttk.Treeview(center_frame, columns=("Name", "Email", "Office Room"),
                                 show='headings', style="Custom.Treeview")
     for col in teacher_tree["columns"]:
         teacher_tree.heading(col, text=col)
         teacher_tree.column(col, anchor="center", width=170)
 
-    # ----- Toggle Button -----
+ 
     toggle_btn = tk.Button(center_frame, text="View Teacher Info", font=("Playfair Display", 13, "bold"),
                            bg="#0078d7", fg="white")
     toggle_btn.pack(pady=5)
 
-    is_showing_teacher = False  # Track state of view
+    is_showing_teacher = False  
 
-    # ----- DB Connect Helper -----
+   
     def db_connect():
         try:
             conn = sqlite3.connect("timetable.db")
@@ -206,7 +206,7 @@ def students_setting():
             messagebox.showerror("Database Error", f"Error connecting to database: {e}")
             return None
 
-    # ----- Load Timetable Immediately -----
+  
     def load_timetable():
         query = """
             SELECT D.DayName,
@@ -248,18 +248,18 @@ def students_setting():
         else:
             messagebox.showinfo("No Data", "No timetable found for your roll number.")
 
-    # ----- Toggle View Function -----
+  
     def toggle_view():
         nonlocal is_showing_teacher
 
         if is_showing_teacher:
-            # Switch to timetable
+        
             teacher_tree.pack_forget()
             timetable_tree.pack(pady=10, fill="both", expand=True)
             toggle_btn.config(text="View Teacher Info")
             is_showing_teacher = False
         else:
-            # Switch to teacher info
+          
             timetable_tree.pack_forget()
             teacher_tree.delete(*teacher_tree.get_children())
 
@@ -294,10 +294,10 @@ def students_setting():
             toggle_btn.config(text="Back to Timetable")
             is_showing_teacher = True
 
-    # Connect button to toggle function
+   
     toggle_btn.config(command=toggle_view)
 
-    # Load initial timetable
+   
     load_timetable()
 
 
@@ -385,11 +385,11 @@ def admin_setting(username, password):
                                      font=("Segoe UI", 10, "bold"), bg="#0078d7", fg="white", bd=0)
         admin_logout_btn.place(relx=0.97, rely=0.02, anchor="ne")
 
-        # Sidebar
+      
         sidebar = tk.Frame(admin_frame, bg="#000000", width=200)
         sidebar.pack(side="left", fill="y")
 
-        # Main content area
+      
         content_area = tk.Frame(admin_frame, bg="#000000")
         content_area.pack(side="right", fill="both", expand=True)
 
@@ -408,14 +408,14 @@ def admin_setting(username, password):
         def load_dashboard():
             clear_content()
 
-            # Heading
+          
             tk.Label(content_area, text="📊 Dashboard Overview", font=("Playfair Display", 20), bg="#000000", fg="white").pack(pady=(70, 50))
 
-            # Frame for stats
+           
             stats_frame = tk.Frame(content_area, bg="#000000")
             stats_frame.pack(pady=20)
 
-            # Function to get counts
+          
             def get_count(table_name):
                 try:
                     conn = sqlite3.connect("timetable.db")
@@ -427,13 +427,13 @@ def admin_setting(username, password):
                 except:
                     return "N/A"
 
-            # Get stats
+       
             student_count = get_count("Students")
             teacher_count = get_count("Teachers")
             course_count = get_count("Courses")
             room_count = get_count("Rooms")
 
-            # Stats list
+        
             stats = [
                 ("👨‍🎓 Total Students", student_count, "#00bfff"),
                 ("👩‍🏫 Total Teachers", teacher_count, "#32cd32"),
@@ -443,8 +443,8 @@ def admin_setting(username, password):
 
             
             for index, (label, count, color) in enumerate(stats):
-                row = index // 2     # 0 for first two, 1 for last two
-                column = index % 2   # 0 and 1 for each row
+                row = index // 2   
+                column = index % 2  
                 box = tk.Frame(stats_frame, bg=color, padx=40, pady=30)
                 box.grid(row=row, column=column, padx=40, pady=30)
 
@@ -459,10 +459,9 @@ def admin_setting(username, password):
         def load_manage_students():
             clear_content()
 
-            # 🏷️ Heading
+      
             tk.Label(content_area, text="🎓 Manage Students", font=("Playfair Display", 20), bg="#000000", fg="white").pack(pady=(30, 20))
 
-            # 📦 Frame for student table
             table_frame = tk.Frame(content_area, bg="#000000")
             table_frame.pack(fill=tk.BOTH, expand=True, padx=20)
             
@@ -479,20 +478,20 @@ def admin_setting(username, password):
             global student_table
             student_table = ttk.Treeview(table_frame, columns=columns, show="headings", height=15)
 
-            # 🔤 Headings and Column Widths
+           
             headings = ["ID", "Roll No.", "Name", "Section"]
             col_widths = [60, 100, 200, 120]
             for col, head, width in zip(columns, headings, col_widths):
                 student_table.heading(col, text=head)
                 student_table.column(col, width=width, anchor="center")
 
-            # 📜 Scrollbar
+          
             scrollbar = ttk.Scrollbar(table_frame, orient="vertical", command=student_table.yview)
             student_table.configure(yscrollcommand=scrollbar.set)
             scrollbar.pack(side="right", fill="y")
             student_table.pack(fill="both", expand=True)
 
-            # 🎛️ Buttons
+           
             btn_frame = tk.Frame(content_area, bg="#000000")
             btn_frame.pack(pady=20)
 
@@ -567,7 +566,7 @@ def admin_setting(username, password):
                 name = name_entry.get()
                 section = section_entry.get()
 
-                # Input Validation
+               
                 if not roll_no or not name or not section:
                     messagebox.showerror("Input Error", "Please fill in all fields")
                     return
@@ -580,13 +579,13 @@ def admin_setting(username, password):
 
 
                     messagebox.showinfo("Success", "Student added successfully!")
-                    add_window.destroy()  # Close the window
-                    content_area.after(100, load_students_data)   # Reload data
+                    add_window.destroy() 
+                    content_area.after(100, load_students_data)  
 
                 except Exception as e:
                     messagebox.showerror("Database Error", f"Error adding student: {e}")
 
-            # Save Button
+           
             tk.Button(add_window, text="Save", font=("Segoe UI", 12, "bold"), bg="#0078d7", fg="white", command=save_student).pack(pady=20)
 
 
@@ -608,7 +607,7 @@ def admin_setting(username, password):
 
             tk.Label(edit_window, text="Edit Student", font=("Playfair Display", 18), bg="#333333", fg="white").pack(pady=20)
 
-            # Entry Fields
+          
             tk.Label(edit_window, text="Roll Number", font=("Segoe UI", 10), bg="#333333", fg="white").pack(pady=(5, 2))
             roll_no_entry = tk.Entry(edit_window, font=("Segoe UI", 12), width=30)
             roll_no_entry.insert(0, roll_no)
@@ -646,12 +645,12 @@ def admin_setting(username, password):
                     conn.close()
 
                     messagebox.showinfo("Success", "Student details updated successfully!")
-                    edit_window.destroy()  # Close the window
-                    load_students_data()    # Reload data
+                    edit_window.destroy()  
+                    load_students_data()    
                 except Exception as e:
                     messagebox.showerror("Database Error", f"Error updating student: {e}")
 
-            # Update Button
+            
             tk.Button(edit_window, text="Update", font=("Segoe UI", 12, "bold"), bg="#0078d7", fg="white", command=update_student).pack(pady=20)
 
 
@@ -667,7 +666,7 @@ def admin_setting(username, password):
                 conn = sqlite3.connect("timetable.db")
                 cur = conn.cursor()
 
-                # Get student details before deletion
+               
                 cur.execute("SELECT RollNumber, StudentName, SectionID FROM Students WHERE StudentID = ?", (student_id,))
                 student = cur.fetchone()
             
@@ -677,19 +676,19 @@ def admin_setting(username, password):
                 if student:
                     roll_no, name, section = student
 
-                     # Insert into DeletedStudents table
+                
                     cur.execute("""
                         INSERT INTO DeletedStudents (StudentID,RollNumber, StudentName, SectionID,DeletedByAdminID)
                         VALUES (?, ?, ?)
                     """, (student_id,roll_no, name, section,admin_id))
                     conn.commit()
 
-                    # Delete from Students table
+                
                     cur.execute("DELETE FROM Students WHERE StudentID = ?", (student_id,))
                     conn.commit()
 
                     messagebox.showinfo("Success", "Student deleted successfully!")
-                    load_students_data()  # Reload data
+                    load_students_data()
                 else:
                     messagebox.showerror("Error", "Student not found.")
 
@@ -716,7 +715,7 @@ def admin_setting(username, password):
 
             tk.Label(assign_window, text="Assign Class", font=("Playfair Display", 18), bg="#333333", fg="white").pack(pady=15)
 
-            # Dropdowns
+           
             tk.Label(assign_window, text="Select Offering", bg="#333333", fg="white").pack()
             offering_combo = ttk.Combobox(assign_window, width=40, state="readonly")
             offering_combo.pack(pady=5)
@@ -737,7 +736,7 @@ def admin_setting(username, password):
             class_type_entry = tk.Entry(assign_window, width=40)
             class_type_entry.pack(pady=5)
 
-            # Load offerings into dropdown
+    
             try:
                 with sqlite3.connect("timetable.db") as conn:
                     cur = conn.cursor()
@@ -769,7 +768,7 @@ def admin_setting(username, password):
                     with sqlite3.connect("timetable.db") as conn:
                         cur = conn.cursor()
 
-                        # Check if student already has a class at this time
+                    
                         cur.execute("""
                             SELECT 1 FROM class_schedule
                             WHERE student_id = ? AND day_id = ? AND timeslot_id = ?
@@ -778,7 +777,7 @@ def admin_setting(username, password):
                             messagebox.showerror("Conflict", "Student already has a class at this time.")
                             return
 
-                        # Check if room is already used at this time
+                      
                         cur.execute("""
                             SELECT 1 FROM ClassTimes
                             WHERE DayID = ? AND SlotID = ? AND RoomID = ?
@@ -787,7 +786,7 @@ def admin_setting(username, password):
                             messagebox.showerror("Conflict", "Room is already booked at this time.")
                             return
 
-                        # Check or create ClassTime
+                    
                         cur.execute("""
                             SELECT ClassTimeID FROM ClassTimes
                             WHERE OfferingID = ? AND DayID = ? AND SlotID = ? AND RoomID = ? AND ClassTypeID = ?
@@ -803,7 +802,7 @@ def admin_setting(username, password):
                             """, (offering_id, day_id, slot_id, room_id, class_type_id))
                             class_time_id = cur.lastrowid
 
-                        # Get Course, Teacher, Section info from Offering
+                      
                         cur.execute("""
                             SELECT CourseID, TeacherID, SectionID
                             FROM CourseOfferings
@@ -817,7 +816,7 @@ def admin_setting(username, password):
 
                         course_id, teacher_id, section_id = offering
 
-                        # Insert into class_schedule
+                      
                         cur.execute("""
                             INSERT INTO class_schedule (student_id, course_id, teacher_id, room_id, section_id, day_id, timeslot_id)
                             VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -843,15 +842,14 @@ def admin_setting(username, password):
 
             tk.Label(log_window, text="🗑️ Deleted Students Log", font=("Playfair Display", 18), bg="#000000", fg="white").pack(pady=20)
 
-            # Frame for table
+         
             table_frame = tk.Frame(log_window, bg="#000000")
             table_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=10)
 
-            # Columns
+         
             columns = ("DeletedID", "RollNumber", "StudentName", "SectionID", "DeletedAt", "DeletedBy")
             tree = ttk.Treeview(table_frame, columns=columns, show="headings")
 
-    # Headings
             tree.heading("DeletedID", text="ID")
             tree.heading("RollNumber", text="Roll Number")
             tree.heading("StudentName", text="Name")
@@ -859,7 +857,6 @@ def admin_setting(username, password):
             tree.heading("DeletedAt", text="Deleted At")
             tree.heading("DeletedBy", text="Deleted By (Admin)")
 
-    # Column widths
             tree.column("DeletedID", width=50, anchor="center")
             tree.column("RollNumber", width=120, anchor="center")
             tree.column("StudentName", width=180, anchor="center")
@@ -867,13 +864,12 @@ def admin_setting(username, password):
             tree.column("DeletedAt", width=180, anchor="center")
             tree.column("DeletedBy", width=180, anchor="center")
 
-    # Scrollbar
             scrollbar = ttk.Scrollbar(table_frame, orient="vertical", command=tree.yview)
             tree.configure(yscrollcommand=scrollbar.set)
             scrollbar.pack(side="right", fill="y")
             tree.pack(fill="both", expand=True)
 
-            # Load data with admin name
+           
             try:
                 with sqlite3.connect("timetable.db", timeout=5) as conn:
                     cur = conn.cursor()
@@ -904,10 +900,10 @@ def admin_setting(username, password):
 
             clear_content()
 
-            # 🏷️ Heading
+          
             tk.Label(content_area, text="👨‍🏫 Manage Teachers", font=("Playfair Display", 20), bg="#000000", fg="white").pack(pady=(30, 20), anchor="w", padx=40)
 
-            # 📦 Frame for teacher table
+          
             table_frame = tk.Frame(content_area, bg="#000000")
             table_frame.pack(fill=tk.BOTH, expand=True, padx=40)
 
@@ -924,7 +920,7 @@ def admin_setting(username, password):
             global teacher_table
             teacher_table = ttk.Treeview(table_frame, columns=columns, show="headings", height=15)
 
-            # 🔤 Headings and Column Widths
+            
             teacher_table.heading("TeacherID", text="ID")
             teacher_table.heading("TeacherName", text="Name")
             teacher_table.heading("AssignedCourses", text="Courses")
@@ -933,13 +929,13 @@ def admin_setting(username, password):
             teacher_table.column("TeacherName", width=200, anchor="center")
             teacher_table.column("AssignedCourses", width=400, anchor="w")
 
-            # 📜 Scrollbar
+            
             scrollbar = ttk.Scrollbar(table_frame, orient="vertical", command=teacher_table.yview)
             teacher_table.configure(yscrollcommand=scrollbar.set)
             scrollbar.pack(side="right", fill="y")
             teacher_table.pack(fill="both", expand=True)
 
-            # 🎛️ Buttons
+            
             btn_frame = tk.Frame(content_area, bg="#000000")
             btn_frame.pack(pady=20)
 
@@ -1042,7 +1038,7 @@ def admin_setting(username, password):
                 conn = sqlite3.connect("timetable.db")
                 cur = conn.cursor()
 
-                # Check if teacher is assigned to any course
+            
                 cur.execute("SELECT COUNT(*) FROM CourseOfferings WHERE TeacherID = ?", (teacher_id,))
                 count = cur.fetchone()[0]
 
@@ -1050,7 +1046,6 @@ def admin_setting(username, password):
                     messagebox.showerror("Cannot Delete", "Teacher is assigned to one or more courses. Remove assignments first.")
                     return
 
-                # Safe to delete
                 cur.execute("DELETE FROM Teachers WHERE TeacherID = ?", (teacher_id,))
                 conn.commit()
                 conn.close()
@@ -1074,7 +1069,7 @@ def admin_setting(username, password):
                     fg="white"
             ).pack(pady=(50, 40))
 
-            # Table Frame
+          
             table_frame = tk.Frame(content_area)
             table_frame.pack(fill=tk.BOTH, expand=True, padx=40)
 
@@ -1096,7 +1091,7 @@ def admin_setting(username, password):
 
             course_table.pack(fill=tk.BOTH, expand=True)
 
-            # Load course data
+            
             try:
                         conn = sqlite3.connect("timetable.db")
                         cur = conn.cursor()
@@ -1123,15 +1118,14 @@ def admin_setting(username, password):
         def load_room_schedule():
             clear_content()
 
-            # 🏷️ Heading
+           
             tk.Label(content_area, text="🏢 Room Scheduling", font=("Playfair Display", 20),
              bg="#000000", fg="white").pack(pady=(30, 20))  # Top margin
 
-            # 📦 Table Frame
+        
             table_frame = tk.Frame(content_area, bg="#000000")
             table_frame.pack(fill=tk.BOTH, expand=True, padx=40, pady=(0, 20))  # Padding at bottom
 
-            # 🧱 Treeview setup
             columns = ("Room", "Day", "Time Slot", "Course", "Teacher", "Section")
 
             room_table = ttk.Treeview(table_frame, columns=columns, show="headings", height=15, style="Custom.Treeview")
@@ -1143,13 +1137,13 @@ def admin_setting(username, password):
                 room_table.heading(col, text=heading)
                 room_table.column(col, width=width, anchor="center")
 
-            # 📜 Scrollbar
+         
             scrollbar = ttk.Scrollbar(table_frame, orient="vertical", command=room_table.yview)
             room_table.configure(yscrollcommand=scrollbar.set)
             scrollbar.pack(side="right", fill="y")
             room_table.pack(fill="both", expand=True)
 
-            #  Treeview style (assuming globally defined)
+          
             style = ttk.Style()
             style.theme_use("default")
             style.configure("Custom.Treeview",
@@ -1159,7 +1153,7 @@ def admin_setting(username, password):
                     font=("Segoe UI", 10))
             style.map("Custom.Treeview", background=[("selected", "#0078d7")])
 
-            # 📥 Load data from database
+        
             try:
                 conn = sqlite3.connect("timetable.db")
                 cur = conn.cursor()
@@ -1201,11 +1195,11 @@ def admin_setting(username, password):
         def load_timetable():
             clear_content()
 
-            # 🏷️ Heading
+          
             tk.Label(content_area, text="🗓️ View & Manage Timetables", font=("Playfair Display", 20),
              bg="#000000", fg="white").pack(pady=(30, 20))
 
-            # 📦 Table Frame
+        
             table_frame = tk.Frame(content_area, bg="#000000")
             table_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=10)
             
@@ -1218,13 +1212,13 @@ def admin_setting(username, password):
                             font=("Segoe UI", 10))
             style.map("Custom.Treeview", background=[("selected", "#0078d7")])
 
-            # 🧱 Treeview setup
+        
             columns = ("ClassTimeID", "CourseCode", "CourseName", "TeacherName", "RoomName", "DayName", "SlotName", "ClassTypeName")
 
             global timetable_table
             timetable_table = ttk.Treeview(table_frame, columns=columns, show="headings", height=15)
 
-            # 🔠 Column headings
+       
             headings = [
                 "ID", "Course Code", "Course Name", "Teacher", "Room", "Day", "Time Slot", "Class Type"
             ]
@@ -1244,13 +1238,13 @@ def admin_setting(username, password):
                 timetable_table.column(col, width=column_settings[col], anchor="center", stretch=True)
 
 
-            # 📜 Add scrollbar
+          
             scrollbar = ttk.Scrollbar(table_frame, orient="vertical", command=timetable_table.yview)
             timetable_table.configure(yscrollcommand=scrollbar.set)
             scrollbar.pack(side="right", fill="y")
             timetable_table.pack(fill="both", expand=True)
 
-            # ⬇️ Load data
+      
             load_timetable_data()
 
 
@@ -1282,11 +1276,11 @@ def admin_setting(username, password):
                 cur.execute(query)
                 records = cur.fetchall()
 
-                # 🧹 Clear old data
+           
                 for row in timetable_table.get_children():
                     timetable_table.delete(row)
 
-                # ➕ Insert rows
+            
                 for row in records:
                     timetable_table.insert("", tk.END, values=row)
 
@@ -1304,27 +1298,25 @@ def admin_setting(username, password):
              
             clear_content()
 
-            # Heading
             tk.Label(content_area, text="⚙️ Admin Account Settings", font=("Playfair Display", 20), bg="#000000", fg="white").pack(pady=(50, 120))
 
-            # Sub-heading
+
             tk.Label(content_area, text="➕ Add New Admin", font=("Playfair Display", 18, "bold"), bg="#0f0f0f", fg="#00ffff").pack(pady=(10, 15))
 
-            # Form frame
+          
             form_frame = tk.Frame(content_area, bg="#0f0f0f")
             form_frame.pack(pady=40)
 
-        # Username
+    
             tk.Label(form_frame, text="Username:", font=("Playfair Display", 18), bg="#0f0f0f", fg="white").grid(row=0, column=0, sticky="w", padx=10, pady=10)
             username_entry = tk.Entry(form_frame, font=("Segoe UI", 14), width=30)
             username_entry.grid(row=0, column=1, padx=10, pady=10)
 
-            # Password
             tk.Label(form_frame, text="Password:", font=("Playfair Display", 18), bg="#0f0f0f", fg="white").grid(row=1, column=0, sticky="w", padx=10, pady=10)
             password_entry = tk.Entry(form_frame, font=("Segoe UI", 14), width=30, show="*")
             password_entry.grid(row=1, column=1, padx=10, pady=10)
 
-    # Add button function
+   
             def add_admin():
                 username = username_entry.get().strip()
                 password = password_entry.get().strip()
@@ -1350,7 +1342,7 @@ def admin_setting(username, password):
                 finally:
                     conn.close()
 
-    # Add button
+  
             tk.Button(content_area, text="Add Admin", font=("Segoe UI", 12, "bold"), bg="#0078d7", fg="white", padx=15, pady=5, command=add_admin).pack(pady=15)
 
 
@@ -1365,10 +1357,10 @@ def admin_setting(username, password):
             "width": 20,
             "anchor": "w",
             "justify": "left",
-            "padx": 25,  # internal left padding
+            "padx": 25,  
         }
 
-# Add some padding above the first button
+
         tk.Button(sidebar, text="📊 Dashboard", command=load_dashboard, **button_style).pack(pady=(110, 10), anchor="w", ipady=6)
         tk.Button(sidebar, text="🎓 Manage Students", command=load_manage_students, **button_style).pack(pady=10, anchor="w", ipady=6)
         tk.Button(sidebar, text="👨‍🏫 Manage Teachers", command=load_manage_teachers, **button_style).pack(pady=10, anchor="w", ipady=6)
